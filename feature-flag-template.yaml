@@ -1,0 +1,39 @@
+apiVersion: "kapitan.razee.io/v1alpha1"
+kind: MustacheTemplate
+metadata:
+  name: feature-flag-template
+  namespace: default
+spec:
+  env:
+  # Feature flags
+  - name: istio
+    value: false
+  - name: knative
+    value: false
+  - name: goldpinger
+    value: false
+  - name: dind
+    value: false
+  - name: nginx
+    value: true
+  # Versions for flagged features above
+  - name: istio-version
+    value: "1.1.7"
+  - name: knative-version
+    value: "0.6.0"
+  - name: goldpinger-version
+    value: "1.5.0"
+  - name: dind-version
+    value: "18.09.6"
+  - name: nginx
+    value: "1.7.9"
+  templates:
+  - apiVersion: "kapitan.razee.io/v1alpha1"
+    kind: RemoteResource
+    metadata:
+      name: feature-flags
+      namespace: default
+    spec:
+      requests:
+      - options:
+          url: https://raw.githubusercontent.com/jpapejr/razee-samples/master/feature-flags.yaml
