@@ -29,14 +29,8 @@ spec:
         volumeMounts: 
           - name: docker-graph-storage 
             mountPath: /var/lib/docker/containers
-          - name: containerd
-            mountPath: /run/containerd/containerd.sock
     volumes: 
       - name: docker-graph-storage 
         hostPath:
           path: /var/lib/docker/io.containerd.grpc.v1.cri/containers
           type: Directory
-      - name: containerd
-        hostPath:
-          path: /run/containerd/containerd.sock
-          type: Socket
