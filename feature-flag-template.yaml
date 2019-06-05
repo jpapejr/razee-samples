@@ -35,5 +35,23 @@ spec:
       namespace: default
     spec:
       requests:
+      {{#istio}}
       - options:
-          url: https://raw.githubusercontent.com/jpapejr/razee-samples/master/feature-flags.yaml
+          url: https://raw.githubusercontent.com/jpapejr/razee-samples/master/istio-v{{istio-version}}.yaml
+      {{/istio}}
+      {{#knative}}
+      - options:
+          url: https://raw.githubusercontent.com/jpapejr/razee-samples/master/knative-v{{knative-version}}.yaml
+      {{/knative}}
+      {{#goldpinger}}
+      - options:
+          url: https://raw.githubusercontent.com/jpapejr/razee-samples/master/goldpinger-v{{goldpinger-version}}.yaml
+      {{/goldpinger}}
+      {{#dind}}
+      - options:
+          url: https://raw.githubusercontent.com/jpapejr/razee-samples/master/dind-v{{dind-version}}.yaml
+      {{/dind}}
+      {{#nginx}}
+      - options:
+          url: https://raw.githubusercontent.com/jpapejr/razee-samples/master/nginx-v{{nginx-version}}.yaml
+      {{/nginx}}
