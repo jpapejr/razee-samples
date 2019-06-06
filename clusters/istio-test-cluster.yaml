@@ -8,10 +8,19 @@ spec:
     - apiVersion: "kapitan.razee.io/v1alpha1"
       kind: RemoteResource
       metadata:
-        name: autorecovery
+        name: autorecovery-feature
         namespace: default
       spec:
         requests:
         - options:
             url: https://raw.githubusercontent.com/jpapejr/razee-samples/master/autorecovery-v1.10.46.yaml
+    - apiVersion: "kapitan.razee.io/v1alpha1"
+      kind: RemoteResource
+      metadata:
+        name: nginx-feature
+        namespace: default
+      spec:
+        requests:
+        - options:
+            url: https://raw.githubusercontent.com/jpapejr/razee-samples/master/nginx-v1.7.9.yaml
         
