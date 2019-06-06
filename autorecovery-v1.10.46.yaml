@@ -4,6 +4,8 @@ apiVersion: v1
 metadata:
   name: ibm-worker-recovery-checks
   namespace: kube-system
+  labels:
+    razee/watch-resource: "detail"
 data:
   checknode.json: |
     {
@@ -53,6 +55,7 @@ metadata:
     release: release-name
     chart: ibm-worker-recovery-1.10.46
     app: ibm-worker-recovery
+    razee/watch-resource: "detail"
 data:
   nurse.toml: |-
     [Partitioner]
@@ -162,6 +165,7 @@ metadata:
     chart: ibm-worker-recovery-1.10.46
     release: release-name
     heritage: Tiller
+    razee/watch-resource: "detail"
 spec:
   type: ClusterIP
   ports:
@@ -183,7 +187,8 @@ metadata:
     app: ibm-worker-recovery-test
     chart: ibm-worker-recovery-1.10.46
     release: release-name
-    heritage: Tiller
+    heritage: Tiller'
+    razee/watch-resource: "detail"
   annotations:
     "helm.sh/hook": test-success
 spec:
@@ -223,6 +228,7 @@ metadata:
     chart: ibm-worker-recovery-1.10.46
     release: release-name
     heritage: Tiller
+    razee/watch-resource: "detail"
   annotations:
     "helm.sh/hook": test-success
 spec:
@@ -262,6 +268,7 @@ metadata:
     chart: ibm-worker-recovery-1.10.46
     release: release-name
     heritage: Tiller
+    razee/watch-resource: "detail"
 spec:
   replicas: 2
   strategy:
