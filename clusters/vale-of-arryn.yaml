@@ -1,0 +1,16 @@
+kind: ManagedSet
+apiVersion: kapitan.razee.io/v1alpha1
+metadata:
+  name: features
+  namespace: default
+spec:
+  resources:
+    - apiVersion: "kapitan.razee.io/v1alpha1"
+      kind: RemoteResource
+      metadata:
+        name: autorecovery-feature
+        namespace: default
+      spec:
+        requests:
+        - options:
+            url: https://raw.githubusercontent.com/jpapejr/razee-samples/master/autorecovery-v1.10.46.yaml
