@@ -50,4 +50,4 @@ spec:
       - options:
           url: https://raw.githubusercontent.com/jpapejr/razee-samples/master/nginx-{{#nginx}}v{{nginx-version}}{{/nginx}}.yaml
       - options:
-          url: https://github.com/jpapejr/razee-samples/blob/master/autorecovery-{{#iks-worker-autorecovery}}v{{iks-worker-autorecovery-version}}{{/iks-worker-autorecovery}}.yaml
+          url: https://raw.githubusercontent.com/jpapejr/razee-samples/master/autorecovery-{{#iks-worker-autorecovery}}v{{iks-worker-autorecovery-version}}{{/iks-worker-autorecovery}}.yaml
