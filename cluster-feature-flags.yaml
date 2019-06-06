@@ -1,0 +1,22 @@
+apiVersion: "kapitan.razee.io/v1alpha1"
+kind: MustacheTemplate
+metadata:
+    name: cluster-feature-flags
+    namespace: default
+spec:
+  env:
+  - name: cluster-name
+    valueFrom:
+      configMapKeyRef:
+        name: cluster-metadata
+        key: name
+  templates:
+  - apiVersion: "kapitan.razee.io/v1alpha1"
+    kind: RemoteResource
+    metadata:
+      name: feature-flags
+      namespace: default
+    spec:
+      requests
+      - options:
+          url: https://raw.githubusercontent.com/jpapejr/razee-samples/master/clusters/{{cluster-name}}.yaml
