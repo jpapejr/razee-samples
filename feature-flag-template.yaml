@@ -31,18 +31,44 @@ spec:
   - apiVersion: "kapitan.razee.io/v1alpha1"
     kind: RemoteResource
     metadata:
-      name: feature-flags
+      name: feature-flag-istio
       namespace: default
     spec:
       requests:
       - options:
           url: https://raw.githubusercontent.com/jpapejr/razee-samples/master/istio-{{#istio}}v{{istio-version}}{{/istio}}.yaml
+  - apiVersion: "kapitan.razee.io/v1alpha1"
+    kind: RemoteResource
+    metadata:
+      name: feature-flag-knative
+      namespace: default
+    spec:
+      requests:
       - options:
           url: https://raw.githubusercontent.com/jpapejr/razee-samples/master/knative-{{#knative}}v{{knative-version}}{{/knative}}.yaml
+  - apiVersion: "kapitan.razee.io/v1alpha1"
+    kind: RemoteResource
+    metadata:
+      name: feature-flag-goldpinger
+      namespace: default
+    spec:
       - options:
           url: https://raw.githubusercontent.com/jpapejr/razee-samples/master/goldpinger-{{#goldpinger}}v{{goldpinger-version}}{{/goldpinger}}.yaml
+  - apiVersion: "kapitan.razee.io/v1alpha1"
+    kind: RemoteResource
+    metadata:
+      name: feature-flag-dind
+      namespace: default
+    spec:
       - options:
           url: https://raw.githubusercontent.com/jpapejr/razee-samples/master/dind-{{#dind}}v{{dind-version}}{{/dind}}.yaml
+  - apiVersion: "kapitan.razee.io/v1alpha1"
+    kind: RemoteResource
+    metadata:
+      name: feature-flag-nginx
+      namespace: default
+    spec:
+      requests:
       - options:
           url: https://raw.githubusercontent.com/jpapejr/razee-samples/master/nginx-{{#nginx}}v{{nginx-version}}{{/nginx}}.yaml
     
