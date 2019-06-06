@@ -6,6 +6,7 @@ metadata:
   name: istio-system
   labels:
     istio-injection: disabled
+    razee/watch-resource: "lite"
 ---
 # Source: istio-init/templates/configmap-crd-10.yaml
 apiVersion: v1
