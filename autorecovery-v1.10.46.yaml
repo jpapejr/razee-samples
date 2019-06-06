@@ -1,0 +1,344 @@
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: ibm-worker-recovery-checks
+  namespace: kube-system
+data:
+  checknode.json: |
+    {
+      "Check":"KUBEAPI",
+      "Resource":"NODE",
+      "FailureThreshold":3,
+      "CorrectiveAction":"RELOAD",
+      "CooloffSeconds":1800,
+      "IntervalSeconds":180,
+      "TimeoutSeconds":10,
+      "Enabled":true
+    }
+  checkpod.json: |
+    {
+      "Check":"KUBEAPI",
+      "Resource":"POD",
+      "PodFailureThresholdPercent":50,
+      "FailureThreshold":3,
+      "CorrectiveAction":"RELOAD",
+      "CooloffSeconds":1800,
+      "IntervalSeconds":180,
+      "TimeoutSeconds":10,
+      "Enabled":true
+    }
+  checkhttp.json: |
+    {
+      "Check":"HTTP",
+      "FailureThreshold":3,
+      "CorrectiveAction":"REBOOT",
+      "CooloffSeconds":1800,
+      "IntervalSeconds":180,
+      "TimeoutSeconds":10,
+      "Port":80,
+      "ExpectedStatus":200,
+      "Route":"/myhealth",
+      "Enabled":false
+    }
+---
+# Source: ibm-worker-recovery/templates/configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ibm-worker-recovery-config
+  namespace: kube-system
+  labels:
+    heritage: Tiller
+    release: release-name
+    chart: ibm-worker-recovery-1.10.46
+    app: ibm-worker-recovery
+data:
+  nurse.toml: |-
+    [Partitioner]
+    unique_label_value = "nurse"
+    unique_label_key = "nursekey"
+    pod_id = ""
+    namespace = "kube-system"
+    peer_cache_ttl_seconds = 10
+    
+    [General]
+    check_information_direction = "/tmp/checkdirectory"
+    max_workers = 50
+    kube_api_timeout_ms = 10000
+    activity_tracker_queue_length = 40
+    kube_api_timeout_seconds = 10
+    node_cache_ttl_seconds = 10
+    armada_api_timeout_seconds = 60
+    node_corrector_check_minutes = 1
+    node_ready_poll_minutes = 5
+    checks_information_timeout_seconds = 30
+    max_kube_system_unready_pods_percentage = 0
+    informer_resync_interval_secs = 0
+    drain_timeout_seconds = 30
+---
+# Source: ibm-worker-recovery/templates/service-account.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: ibm-worker-recovery
+  namespace: kube-system
+  labels:
+    app: ibm-worker-recovery
+    chart: ibm-worker-recovery-1.10.46
+    release: release-name
+    heritage: Tiller
+imagePullSecrets:
+- name: bluemix-default-secret
+- name: bluemix-default-secret-regional
+- name: bluemix-default-secret-international
+---
+# Source: ibm-worker-recovery/templates/cluster-role.yaml
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: ibm-worker-recovery-role
+  labels:
+    app: ibm-worker-recovery
+    chart: ibm-worker-recovery-1.10.46
+    release: release-name
+    heritage: Tiller
+rules:
+- apiGroups: [""]
+  resources: ["nodes"]
+  verbs: ["get", "watch", "list","update","patch","post"]
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs: ["get", "watch", "list","update","patch"]
+- apiGroups: [""]
+  resources: ["configmaps"]
+  verbs: ["get", "watch", "list","create","post","update","patch","delete"]
+- apiGroups: ["", "extensions"]
+  resources: ["deployments"]
+  verbs: ["get", "watch", "list","create","post","update","patch"]
+- apiGroups: [""]
+  resources: ["events"]
+  verbs: ["get", "watch", "list","update","patch","create"]
+- apiGroups: ["apps", "extensions"]
+  resources: ["daemonsets"]
+  verbs: ["get", "watch", "list"]
+- apiGroups: ["apps", "extensions"]
+  resources: ["daemonsets/status"]
+  verbs: ["update"]
+- apiGroups: ["apps", "extensions"]
+  resources: ["daemonsets/finalizers"]
+  verbs: ["update"]
+- apiGroups: [""]
+  resources: ["pods/eviction"]
+  verbs: ["create"]
+---
+# Source: ibm-worker-recovery/templates/cluster-role-binding.yaml
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: ibm-worker-recovery-role-binding
+  labels:
+    app: ibm-worker-recovery
+    chart: ibm-worker-recovery-1.10.46
+    release: release-name
+    heritage: Tiller
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: ibm-worker-recovery-role
+subjects:
+- kind: ServiceAccount
+  name: ibm-worker-recovery
+  namespace: kube-system
+---
+# Source: ibm-worker-recovery/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: ibm-worker-recovery
+  namespace: kube-system
+  labels:
+    app: ibm-worker-recovery
+    chart: ibm-worker-recovery-1.10.46
+    release: release-name
+    heritage: Tiller
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8080
+      targetPort: 8080
+      protocol: TCP
+  selector:
+    app: 
+    release: release-name
+
+---
+# Source: ibm-worker-recovery/templates/tests/check_configs.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: ibm-worker-recovery-check-config
+  namespace: kube-system
+  labels:
+    app: ibm-worker-recovery-test
+    chart: ibm-worker-recovery-1.10.46
+    release: release-name
+    heritage: Tiller
+  annotations:
+    "helm.sh/hook": test-success
+spec:
+  containers:
+  - name: ibm-worker-recovery-check-config
+    image: registry.bluemix.net/ibm/alpine
+    command: ["sh", "-c"]
+    args:
+    - |
+      echo "-------------------------------------------------------";
+      echo "  Check the state of the config pods";
+      echo "-------------------------------------------------------";
+      echo "-- Add curl to the image --";
+      set -x
+      apk update && apk add curl;
+      cd /usr/local/bin;
+      echo "-- Add kubectl to the image --";
+      minor=$(echo 9)
+      curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.$minor.0/bin/linux/amd64/kubectl;
+      chmod +x kubectl;
+      if [[ $(kubectl get cm -n kube-system | grep ibm-worker-recovery | wc -l) -lt 1 ]]; then
+        echo "cluster should contain ibm-worker-recovery-config under configmaps kube-system namespace"
+        exit 1
+      fi
+  restartPolicy: Never
+  serviceAccountName: ibm-worker-recovery
+  serviceAccount: ibm-worker-recovery
+---
+# Source: ibm-worker-recovery/templates/tests/check_pods.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: ibm-worker-recovery-check-pod-state
+  namespace: kube-system
+  labels:
+    app: ibm-worker-recovery-test
+    chart: ibm-worker-recovery-1.10.46
+    release: release-name
+    heritage: Tiller
+  annotations:
+    "helm.sh/hook": test-success
+spec:
+  containers:
+  - name: ibm-worker-recovery-check-state
+    image: registry.bluemix.net/ibm/alpine
+    command: ["sh", "-c"]
+    args:
+    - |
+      echo "-------------------------------------------------------";
+      echo "  Check the state of the worker-recovery pods";
+      echo "-------------------------------------------------------";
+      echo "-- Add curl to the image --";
+      set -x
+      apk update && apk add curl;
+      cd /usr/local/bin;
+      echo "-- Add kubectl to the image --";
+      minor=$(echo 9)
+      curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.$minor.0/bin/linux/amd64/kubectl;
+      chmod +x kubectl;
+      if [[ $(kubectl get pods -n kube-system | grep ibm-worker-recovery | grep Running | wc -l) -lt 2 ]]; then
+        echo "Both pods are not in Running state"
+        exit 1
+      fi
+  restartPolicy: Never
+  serviceAccountName: ibm-worker-recovery
+  serviceAccount: ibm-worker-recovery
+---
+# Source: ibm-worker-recovery/templates/deployment.yaml
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: ibm-worker-recovery
+  namespace: kube-system
+  labels:
+    app: ibm-worker-recovery
+    chart: ibm-worker-recovery-1.10.46
+    release: release-name
+    heritage: Tiller
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+  revisionHistoryLimit: 10
+  template:
+    metadata:
+      labels:
+        nursekey: nurse
+        app: ibm-worker-recovery
+        release: release-name
+      annotations:
+        scheduler.alpha.kubernetes.io/critical-pod: ''
+    spec:
+      tolerations:
+      - operator: "Exists"
+      serviceAccount: ibm-worker-recovery
+      containers:
+        - name: ibm-worker-recovery
+          image: registry.bluemix.net/armada-master/ibm-worker-recovery:9868735137166e89386f9f47b8875619f2497fb5
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            failureThreshold: 4
+            initialDelaySeconds: 10
+            periodSeconds: 60
+            successThreshold: 1
+            timeoutSeconds: 20
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            failureThreshold: 4
+            initialDelaySeconds: 10
+            periodSeconds: 60
+            successThreshold: 1
+            timeoutSeconds: 20
+          env:
+            - name: NURSE_POD_ID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: NURSE_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace            
+          volumeMounts:
+            - name: config-volume
+              mountPath: /go/src/github.ibm.com/alchemy-containers/ibm-worker-recovery/etc/config
+            - name: checks-volume
+              mountPath: /tmp/checkdirectory
+            - name: storage-volume
+              readOnly: true
+              mountPath: /go/src/github.ibm.com/alchemy-containers/ibm-worker-recovery/etc/secret
+            - name: cluster-volume
+              readOnly: true
+              mountPath: /go/src/github.ibm.com/alchemy-containers/ibm-worker-recovery/etc/clusterinfo
+      volumes:
+        - name: config-volume
+          configMap:
+            name: ibm-worker-recovery-config
+        - name: checks-volume
+          configMap:
+            name: ibm-worker-recovery-checks
+            optional: true
+        - name: cluster-volume
+          configMap:
+            name: cluster-info                  
+        - name: storage-volume
+          secret:
+            secretName: storage-secret-store
+            optional: true
+---
+# Source: ibm-worker-recovery/templates/configmap-checks.yaml
+# This configmap contains the configuration for the checks that are used
+
