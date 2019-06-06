@@ -15,7 +15,7 @@ spec:
   - name: dind
     value: false
   - name: nginx
-    value: true
+    value: false
   # Versions for flagged features above
   - name: istio-version
     value: "1.1.7"
