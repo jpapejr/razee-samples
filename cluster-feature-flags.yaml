@@ -17,6 +17,6 @@ spec:
       name: feature-flags
       namespace: default
     spec:
-      requests
+      requests:
       - options:
           url: https://raw.githubusercontent.com/jpapejr/razee-samples/master/clusters/{{cluster-name}}.yaml
