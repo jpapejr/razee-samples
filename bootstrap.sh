@@ -11,3 +11,5 @@ read -p 'Provide the install command for Razee: ' command
 $command
 
 kubectl apply -f https://ibm.biz/jtp-razee-setup
+
+kubectl label no --all razee/watch-resource="detail"
