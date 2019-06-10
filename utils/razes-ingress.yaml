@@ -1,0 +1,62 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: razeedash
+  labels:
+    razee/watch-resource: "detail"
+  annotations:
+    ingress.bluemix.net/redirect-to-https: "True"
+spec:
+  tls:
+  - hosts:
+    - razeedash.jtp-razee.us-east.containers.appdomain.cloud
+    - razeedash.kubedclouds.us
+    secretName: jtp-razee
+  rules:
+  - host: razeedash.jtp-razee.us-east.containers.appdomain.cloud
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: razeedash-lb
+          servicePort: 8080
+  - host: razeedash.kubedclouds.us
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: razeedash-lb
+          servicePort: 8080
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: razeedash-api.jtp-razee.us-east.containers.appdomain.cloud
+  annotations:
+    ingress.bluemix.net/redirect-to-https: "True"
+  labels:
+    razee/watch-resource: "detail"
+spec:
+  tls:
+  - hosts:
+    - razeedash-api.jtp-razee.us-east.containers.appdomain.cloud
+    - razeedash-api.kubedclouds.us
+    secretName: jtp-razee
+  rules:
+  - host: razeedash-api.jtp-razee.us-east.containers.appdomain.cloud
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: razeedash-api-lb
+          servicePort: 8081
+  - host: razeedash-api.kubedclouds.us
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: razeedash-api-lb
+          servicePort: 8081
+
+
+          
