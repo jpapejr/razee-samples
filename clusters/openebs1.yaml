@@ -23,3 +23,12 @@ spec:
         requests:
         - options:
             url: https://raw.githubusercontent.com/jpapejr/razee-samples/master/openebs-v0.8.5.yaml
+    - apiVersion: "kapitan.razee.io/v1alpha1"
+      kind: RemoteResource
+      metadata:
+        name: openebs-feature
+        namespace: default
+      spec:
+        requests:
+        - options:
+            url: https://raw.githubusercontent.com/jpapejr/razee-samples/master/goldpinger-v1.5.0.yaml
