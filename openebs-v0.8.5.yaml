@@ -387,7 +387,7 @@ spec:
         # OPENEBS_NAMESPACE is the namespace that this provisioner will
         # lookup to find maya api service
         - name: OPENEBS_NAMESPACE
-          value: "openebs"
+          value: "default"
         - name: NODE_NAME
           valueFrom:
             fieldRef:
