@@ -22,4 +22,4 @@ spec:
       spec:
         requests:
         - options:
-            url: https://raw.githubusercontent.com/jpapejr/razee-samples/master/istio-v1.1.7.yaml
+            url: https://raw.githubusercontent.com/jpapejr/razee-samples/master/istio-v1.2.2.yaml
