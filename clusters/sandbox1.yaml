@@ -17,7 +17,7 @@ spec:
     - apiVersion: "kapitan.razee.io/v1alpha1"
       kind: RemoteResource
       metadata:
-        name: istio-1.1.7-feature
+        name: istio-1.2.2-feature
         namespace: default
       spec:
         requests:
