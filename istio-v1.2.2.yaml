@@ -12,7 +12,7 @@ apiVersion: policy/v1beta1
 kind: PodDisruptionBudget
 metadata:
   name: istio-galley
-  namespace: default
+  namespace: istio-system
   labels:
     app: galley
     chart: galley
@@ -31,7 +31,7 @@ apiVersion: policy/v1beta1
 kind: PodDisruptionBudget
 metadata:
   name: istio-ingressgateway
-  namespace: default
+  namespace: istio-system
   labels:
     chart: gateways
     heritage: Tiller
@@ -50,7 +50,7 @@ apiVersion: policy/v1beta1
 kind: PodDisruptionBudget
 metadata:
   name: istio-policy
-  namespace: default
+  namespace: istio-system
   labels:
     app: policy
     chart: mixer
@@ -72,7 +72,7 @@ apiVersion: policy/v1beta1
 kind: PodDisruptionBudget
 metadata:
   name: istio-telemetry
-  namespace: default
+  namespace: istio-system
   labels:
     app: telemetry
     chart: mixer
@@ -94,7 +94,7 @@ apiVersion: policy/v1beta1
 kind: PodDisruptionBudget
 metadata:
   name: istio-pilot
-  namespace: default
+  namespace: istio-system
   labels:
     app: pilot
     chart: pilot
@@ -115,7 +115,7 @@ apiVersion: policy/v1beta1
 kind: PodDisruptionBudget
 metadata:
   name: istio-sidecar-injector
-  namespace: default
+  namespace: istio-system
   labels:
     app: sidecarInjectorWebhook
     release: release-name
@@ -133,7 +133,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: istio-galley-configuration
-  namespace: default
+  namespace: istio-system
   labels:
     app: galley
     chart: galley
@@ -157,7 +157,7 @@ data:
         clientConfig:
           service:
             name: istio-galley
-            namespace: default
+            namespace: istio-system
             path: "/admitpilot"
           caBundle: ""
         rules:
@@ -211,7 +211,7 @@ data:
         clientConfig:
           service:
             name: istio-galley
-            namespace: default
+            namespace: istio-system
             path: "/admitmixer"
           caBundle: ""
         rules:
@@ -264,7 +264,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: prometheus
-  namespace: default
+  namespace: istio-system
   labels:
     app: prometheus
     chart: prometheus
@@ -527,7 +527,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: istio-security-custom-resources
-  namespace: default
+  namespace: istio-system
   labels:
     app: security
     chart: security
@@ -590,7 +590,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: istio
-  namespace: default
+  namespace: istio-system
   labels:
     app: istio
     chart: istio
@@ -667,7 +667,7 @@ data:
 
     # The namespace to treat as the administrative root namespace for istio
     # configuration.    
-    rootNamespace: default
+    rootnamespace: istio-system
     configSources:
     - address: istio-galley.default.svc:9901
 
@@ -735,7 +735,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: istio-sidecar-injector
-  namespace: default
+  namespace: istio-system
   labels:
     app: istio
     chart: istio
@@ -1110,7 +1110,7 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: istio-galley-service-account
-  namespace: default
+  namespace: istio-system
   labels:
     app: galley
     chart: galley
@@ -1124,7 +1124,7 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: istio-ingressgateway-service-account
-  namespace: default
+  namespace: istio-system
   labels:
     app: istio-ingressgateway
     chart: gateways
@@ -1140,7 +1140,7 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: istio-mixer-service-account
-  namespace: default
+  namespace: istio-system
   labels:
     app: mixer
     chart: mixer
@@ -1153,7 +1153,7 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: istio-pilot-service-account
-  namespace: default
+  namespace: istio-system
   labels:
     app: pilot
     chart: pilot
@@ -1166,7 +1166,7 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: prometheus
-  namespace: default
+  namespace: istio-system
   labels:
     app: prometheus
     chart: prometheus
@@ -1188,7 +1188,7 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: istio-cleanup-secrets-service-account
-  namespace: default
+  namespace: istio-system
   annotations:
     "helm.sh/hook": post-delete
     "helm.sh/hook-delete-policy": hook-succeeded
@@ -1237,13 +1237,13 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: istio-cleanup-secrets-service-account
-    namespace: default
+    namespace: istio-system
 ---
 apiVersion: batch/v1
 kind: Job
 metadata:
   name: istio-cleanup-secrets-1.2.2
-  namespace: default
+  namespace: istio-system
   annotations:
     "helm.sh/hook": post-delete
     "helm.sh/hook-delete-policy": hook-succeeded
@@ -1319,7 +1319,7 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: istio-security-post-install-account
-  namespace: default
+  namespace: istio-system
   labels:
     app: security
     chart: security
@@ -1365,13 +1365,13 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: istio-security-post-install-account
-    namespace: default
+    namespace: istio-system
 ---
 apiVersion: batch/v1
 kind: Job
 metadata:
   name: istio-security-post-install-1.2.2
-  namespace: default
+  namespace: istio-system
   annotations:
     "helm.sh/hook": post-install
     "helm.sh/hook-delete-policy": hook-succeeded
@@ -1444,7 +1444,7 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: istio-citadel-service-account
-  namespace: default
+  namespace: istio-system
   labels:
     app: security
     chart: security
@@ -1457,7 +1457,7 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: istio-sidecar-injector-service-account
-  namespace: default
+  namespace: istio-system
   labels:
     app: sidecarInjectorWebhook
     chart: sidecarInjectorWebhook
@@ -1471,7 +1471,7 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: istio-multi
-  namespace: default
+  namespace: istio-system
 
 ---
 # Source: istio/charts/galley/templates/clusterrole.yaml
@@ -1682,7 +1682,7 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: istio-galley-service-account
-    namespace: default
+    namespace: istio-system
 
 ---
 # Source: istio/charts/mixer/templates/clusterrolebinding.yaml
@@ -1703,7 +1703,7 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: istio-mixer-service-account
-    namespace: default
+    namespace: istio-system
 
 ---
 # Source: istio/charts/pilot/templates/clusterrolebinding.yaml
@@ -1723,7 +1723,7 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: istio-pilot-service-account
-    namespace: default
+    namespace: istio-system
 
 ---
 # Source: istio/charts/prometheus/templates/clusterrolebindings.yaml
@@ -1743,7 +1743,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: prometheus
-  namespace: default
+  namespace: istio-system
 
 ---
 # Source: istio/charts/security/templates/clusterrolebinding.yaml
@@ -1763,7 +1763,7 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: istio-citadel-service-account
-    namespace: default
+    namespace: istio-system
 
 ---
 # Source: istio/charts/sidecarInjectorWebhook/templates/clusterrolebinding.yaml
@@ -1784,7 +1784,7 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: istio-sidecar-injector-service-account
-    namespace: default
+    namespace: istio-system
 
 ---
 # Source: istio/templates/clusterrolebinding.yaml
@@ -1801,7 +1801,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: istio-multi
-  namespace: default
+  namespace: istio-system
 
 ---
 # Source: istio/charts/gateways/templates/role.yaml
@@ -1810,7 +1810,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: istio-ingressgateway-sds
-  namespace: default
+  namespace: istio-system
 rules:
 - apiGroups: [""]
   resources: ["secrets"]
@@ -1824,7 +1824,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: istio-ingressgateway-sds
-  namespace: default
+  namespace: istio-system
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -1840,7 +1840,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: istio-galley
-  namespace: default
+  namespace: istio-system
   labels:
     app: galley
     chart: galley
@@ -1865,7 +1865,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: istio-ingressgateway
-  namespace: default
+  namespace: istio-system
   annotations:
   labels:
     chart: gateways
@@ -1926,7 +1926,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: istio-policy
-  namespace: default
+  namespace: istio-system
   annotations:
    networking.istio.io/exportTo: "*"
   labels:
@@ -1951,7 +1951,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: istio-telemetry
-  namespace: default
+  namespace: istio-system
   annotations:
    networking.istio.io/exportTo: "*"
   labels:
@@ -1982,7 +1982,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: istio-pilot
-  namespace: default
+  namespace: istio-system
   labels:
     app: pilot
     chart: pilot
@@ -2008,7 +2008,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: prometheus
-  namespace: default
+  namespace: istio-system
   annotations:
     prometheus.io/scrape: 'true'
   labels:
@@ -2032,7 +2032,7 @@ metadata:
   # we use the normal name here (e.g. 'prometheus')
   # as grafana is configured to use this as a data source
   name: istio-citadel
-  namespace: default
+  namespace: istio-system
   labels:
     app: security
     chart: security
@@ -2056,7 +2056,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: istio-sidecar-injector
-  namespace: default
+  namespace: istio-system
   labels:
     app: sidecarInjectorWebhook
     chart: sidecarInjectorWebhook
@@ -2075,7 +2075,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: istio-galley
-  namespace: default
+  namespace: istio-system
   labels:
     app: galley
     chart: galley
@@ -2208,7 +2208,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: istio-ingressgateway
-  namespace: default
+  namespace: istio-system
   labels:
     chart: gateways
     heritage: Tiller
@@ -2393,7 +2393,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: istio-policy
-  namespace: default
+  namespace: istio-system
   labels:
     app: istio-mixer
     chart: mixer
@@ -2562,7 +2562,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: istio-telemetry
-  namespace: default
+  namespace: istio-system
   labels:
     app: istio-mixer
     chart: mixer
@@ -2742,7 +2742,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: istio-pilot
-  namespace: default
+  namespace: istio-system
   # TODO: default template doesn't have this, which one is right ?
   labels:
     app: pilot
@@ -2921,7 +2921,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: prometheus
-  namespace: default
+  namespace: istio-system
   labels:
     app: prometheus
     chart: prometheus
@@ -3019,7 +3019,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: istio-citadel
-  namespace: default
+  namespace: istio-system
   labels:
     app: security
     chart: security
@@ -3103,7 +3103,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: istio-sidecar-injector
-  namespace: default
+  namespace: istio-system
   labels:
     app: sidecarInjectorWebhook
     chart: sidecarInjectorWebhook
@@ -3231,7 +3231,7 @@ apiVersion: autoscaling/v2beta1
 kind: HorizontalPodAutoscaler
 metadata:
   name: istio-ingressgateway
-  namespace: default
+  namespace: istio-system
   labels:
     chart: gateways
     heritage: Tiller
@@ -3259,7 +3259,7 @@ apiVersion: autoscaling/v2beta1
 kind: HorizontalPodAutoscaler
 metadata:
   name: istio-policy
-  namespace: default
+  namespace: istio-system
   labels:
     app: mixer
     chart: mixer
@@ -3282,7 +3282,7 @@ apiVersion: autoscaling/v2beta1
 kind: HorizontalPodAutoscaler
 metadata:
   name: istio-telemetry
-  namespace: default
+  namespace: istio-system
   labels:
     app: mixer
     chart: mixer
@@ -3309,7 +3309,7 @@ apiVersion: autoscaling/v2beta1
 kind: HorizontalPodAutoscaler
 metadata:
   name: istio-pilot
-  namespace: default
+  namespace: istio-system
   labels:
     app: pilot
     chart: pilot
@@ -3345,7 +3345,7 @@ webhooks:
     clientConfig:
       service:
         name: istio-sidecar-injector
-        namespace: default
+        namespace: istio-system
         path: "/inject"
       caBundle: ""
     rules:
@@ -3414,7 +3414,7 @@ apiVersion: "config.istio.io/v1alpha2"
 kind: attributemanifest
 metadata:
   name: istioproxy
-  namespace: default
+  namespace: istio-system
   labels:
     app: mixer
     chart: mixer
@@ -3555,7 +3555,7 @@ apiVersion: "config.istio.io/v1alpha2"
 kind: attributemanifest
 metadata:
   name: kubernetes
-  namespace: default
+  namespace: istio-system
   labels:
     app: mixer
     chart: mixer
@@ -3621,7 +3621,7 @@ apiVersion: "config.istio.io/v1alpha2"
 kind: instance
 metadata:
   name: requestcount
-  namespace: default
+  namespace: istio-system
   labels:
     app: mixer
     chart: mixer
@@ -3658,7 +3658,7 @@ apiVersion: "config.istio.io/v1alpha2"
 kind: instance
 metadata:
   name: requestduration
-  namespace: default
+  namespace: istio-system
   labels:
     app: mixer
     chart: mixer
@@ -3695,7 +3695,7 @@ apiVersion: "config.istio.io/v1alpha2"
 kind: instance
 metadata:
   name: requestsize
-  namespace: default
+  namespace: istio-system
   labels:
     app: mixer
     chart: mixer
@@ -3732,7 +3732,7 @@ apiVersion: "config.istio.io/v1alpha2"
 kind: instance
 metadata:
   name: responsesize
-  namespace: default
+  namespace: istio-system
   labels:
     app: mixer
     chart: mixer
@@ -3769,7 +3769,7 @@ apiVersion: "config.istio.io/v1alpha2"
 kind: instance
 metadata:
   name: tcpbytesent
-  namespace: default
+  namespace: istio-system
   labels:
     app: mixer
     chart: mixer
@@ -3802,7 +3802,7 @@ apiVersion: "config.istio.io/v1alpha2"
 kind: instance
 metadata:
   name: tcpbytereceived
-  namespace: default
+  namespace: istio-system
   labels:
     app: mixer
     chart: mixer
@@ -3835,7 +3835,7 @@ apiVersion: "config.istio.io/v1alpha2"
 kind: instance
 metadata:
   name: tcpconnectionsopened
-  namespace: default
+  namespace: istio-system
   labels:
     app: mixer
     chart: mixer
@@ -3868,7 +3868,7 @@ apiVersion: "config.istio.io/v1alpha2"
 kind: instance
 metadata:
   name: tcpconnectionsclosed
-  namespace: default
+  namespace: istio-system
   labels:
     app: mixer
     chart: mixer
@@ -3901,7 +3901,7 @@ apiVersion: "config.istio.io/v1alpha2"
 kind: handler
 metadata:
   name: prometheus
-  namespace: default
+  namespace: istio-system
   labels:
     app: mixer
     chart: mixer
@@ -4107,7 +4107,7 @@ apiVersion: "config.istio.io/v1alpha2"
 kind: rule
 metadata:
   name: promhttp
-  namespace: default
+  namespace: istio-system
   labels:
     app: mixer
     chart: mixer
@@ -4127,7 +4127,7 @@ apiVersion: "config.istio.io/v1alpha2"
 kind: rule
 metadata:
   name: promtcp
-  namespace: default
+  namespace: istio-system
   labels:
     app: mixer
     chart: mixer
@@ -4145,7 +4145,7 @@ apiVersion: "config.istio.io/v1alpha2"
 kind: rule
 metadata:
   name: promtcpconnectionopen
-  namespace: default
+  namespace: istio-system
   labels:
     app: mixer
     chart: mixer
@@ -4162,7 +4162,7 @@ apiVersion: "config.istio.io/v1alpha2"
 kind: rule
 metadata:
   name: promtcpconnectionclosed
-  namespace: default
+  namespace: istio-system
   labels:
     app: mixer
     chart: mixer
@@ -4179,7 +4179,7 @@ apiVersion: "config.istio.io/v1alpha2"
 kind: handler
 metadata:
   name: kubernetesenv
-  namespace: default
+  namespace: istio-system
   labels:
     app: mixer
     chart: mixer
@@ -4200,7 +4200,7 @@ apiVersion: "config.istio.io/v1alpha2"
 kind: rule
 metadata:
   name: kubeattrgenrulerule
-  namespace: default
+  namespace: istio-system
   labels:
     app: mixer
     chart: mixer
@@ -4216,7 +4216,7 @@ apiVersion: "config.istio.io/v1alpha2"
 kind: rule
 metadata:
   name: tcpkubeattrgenrulerule
-  namespace: default
+  namespace: istio-system
   labels:
     app: mixer
     chart: mixer
@@ -4233,7 +4233,7 @@ apiVersion: "config.istio.io/v1alpha2"
 kind: instance
 metadata:
   name: attributes
-  namespace: default
+  namespace: istio-system
   labels:
     app: mixer
     chart: mixer
@@ -4279,7 +4279,7 @@ apiVersion: networking.istio.io/v1alpha3
 kind: DestinationRule
 metadata:
   name: istio-policy
-  namespace: default
+  namespace: istio-system
   labels:
     app: mixer
     chart: mixer
@@ -4297,7 +4297,7 @@ apiVersion: networking.istio.io/v1alpha3
 kind: DestinationRule
 metadata:
   name: istio-telemetry
-  namespace: default
+  namespace: istio-system
   labels:
     app: mixer
     chart: mixer
