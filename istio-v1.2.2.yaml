@@ -7,8 +7,7 @@ metadata:
   labels:
     istio-injection: disabled
     razee/watch-resource: "lite"
-# Source: istio/charts/galley/templates/poddisruptionbudget.yaml
-
+---
 apiVersion: policy/v1beta1
 kind: PodDisruptionBudget
 metadata:
@@ -21,14 +20,12 @@ metadata:
     release: release-name
     istio: galley
 spec:
-
   minAvailable: 1
   selector:
     matchLabels:
       app: galley
       release: release-name
       istio: galley
-
 ---
 apiVersion: policy/v1beta1
 kind: PodDisruptionBudget
@@ -42,7 +39,6 @@ metadata:
     app: istio-ingressgateway
     istio: ingressgateway
 spec:
-
   minAvailable: 1
   selector:
     matchLabels:
@@ -50,10 +46,6 @@ spec:
       app: istio-ingressgateway
       istio: ingressgateway
 ---
-
----
-# Source: istio/charts/mixer/templates/poddisruptionbudget.yaml
-
 apiVersion: policy/v1beta1
 kind: PodDisruptionBudget
 metadata:
@@ -68,7 +60,6 @@ metadata:
     istio: mixer
     istio-mixer-type: policy
 spec:
-
   minAvailable: 1
   selector:
     matchLabels:
@@ -91,7 +82,6 @@ metadata:
     istio: mixer
     istio-mixer-type: telemetry
 spec:
-
   minAvailable: 1
   selector:
     matchLabels:
@@ -100,10 +90,6 @@ spec:
       istio: mixer
       istio-mixer-type: telemetry
 ---
-
----
-# Source: istio/charts/pilot/templates/poddisruptionbudget.yaml
-
 apiVersion: policy/v1beta1
 kind: PodDisruptionBudget
 metadata:
@@ -123,10 +109,8 @@ spec:
       app: pilot
       release: release-name
       istio: pilot
-
 ---
 # Source: istio/charts/sidecarInjectorWebhook/templates/poddisruptionbudget.yaml
-
 apiVersion: policy/v1beta1
 kind: PodDisruptionBudget
 metadata:
@@ -137,7 +121,6 @@ metadata:
     release: release-name
     istio: sidecar-injector
 spec:
-
   minAvailable: 1
   selector:
     matchLabels:
@@ -292,25 +275,21 @@ data:
     global:
       scrape_interval: 15s
     scrape_configs:
-
     - job_name: 'istio-mesh'
       kubernetes_sd_configs:
       - role: endpoints
         namespaces:
           names:
           - default
-
       relabel_configs:
       - source_labels: [__meta_kubernetes_service_name, __meta_kubernetes_endpoint_port_name]
         action: keep
         regex: istio-telemetry;prometheus
-
     # Scrape config for envoy stats
     - job_name: 'envoy-stats'
       metrics_path: /stats/prometheus
       kubernetes_sd_configs:
       - role: pod
-
       relabel_configs:
       - source_labels: [__meta_kubernetes_pod_container_port_name]
         action: keep
@@ -328,68 +307,56 @@ data:
       - source_labels: [__meta_kubernetes_pod_name]
         action: replace
         target_label: pod_name
-
     - job_name: 'istio-policy'
       kubernetes_sd_configs:
       - role: endpoints
         namespaces:
           names:
           - default
-
-
       relabel_configs:
       - source_labels: [__meta_kubernetes_service_name, __meta_kubernetes_endpoint_port_name]
         action: keep
         regex: istio-policy;http-monitoring
-
     - job_name: 'istio-telemetry'
       kubernetes_sd_configs:
       - role: endpoints
         namespaces:
           names:
           - default
-
       relabel_configs:
       - source_labels: [__meta_kubernetes_service_name, __meta_kubernetes_endpoint_port_name]
         action: keep
         regex: istio-telemetry;http-monitoring
-
     - job_name: 'pilot'
       kubernetes_sd_configs:
       - role: endpoints
         namespaces:
           names:
           - default
-
       relabel_configs:
       - source_labels: [__meta_kubernetes_service_name, __meta_kubernetes_endpoint_port_name]
         action: keep
         regex: istio-pilot;http-monitoring
-
     - job_name: 'galley'
       kubernetes_sd_configs:
       - role: endpoints
         namespaces:
           names:
           - default
-
       relabel_configs:
       - source_labels: [__meta_kubernetes_service_name, __meta_kubernetes_endpoint_port_name]
         action: keep
         regex: istio-galley;http-monitoring
-
     - job_name: 'citadel'
       kubernetes_sd_configs:
       - role: endpoints
         namespaces:
           names:
           - default
-
       relabel_configs:
       - source_labels: [__meta_kubernetes_service_name, __meta_kubernetes_endpoint_port_name]
         action: keep
         regex: istio-citadel;http-monitoring
-
     # scrape config for API servers
     - job_name: 'kubernetes-apiservers'
       kubernetes_sd_configs:
@@ -405,7 +372,6 @@ data:
       - source_labels: [__meta_kubernetes_service_name, __meta_kubernetes_endpoint_port_name]
         action: keep
         regex: kubernetes;https
-
     # scrape config for nodes (kubelet)
     - job_name: 'kubernetes-nodes'
       scheme: https
@@ -423,7 +389,6 @@ data:
         regex: (.+)
         target_label: __metrics_path__
         replacement: /api/v1/nodes/${1}/proxy/metrics
-
     # Scrape config for Kubelet cAdvisor.
     #
     # This is required for Kubernetes 1.7.3 and later, where cAdvisor metrics
@@ -454,7 +419,6 @@ data:
         regex: (.+)
         target_label: __metrics_path__
         replacement: /api/v1/nodes/${1}/proxy/metrics/cadvisor
-
     # scrape config for service endpoints.
     - job_name: 'kubernetes-service-endpoints'
       kubernetes_sd_configs:
@@ -484,7 +448,6 @@ data:
       - source_labels: [__meta_kubernetes_service_name]
         action: replace
         target_label: kubernetes_name
-
     - job_name: 'kubernetes-pods'
       kubernetes_sd_configs:
       - role: pod
