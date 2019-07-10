@@ -1,0 +1,63 @@
+kind: ManagedSet
+apiVersion: kapitan.razee.io/v1alpha1
+metadata:
+  name: knative-v0.7.0
+  namespace: default
+  labels:
+    razee/watch-resource: "detail"
+spec:
+  resources:
+  - apiVersion: "kapitan.razee.io/v1alpha1"
+    kind: RemoteResourceS3
+    metadata:
+      name: knative-serving
+      namespace: default
+    spec:
+      requests:
+      - options:
+          url: https://github.com/knative/serving/releases/download/v0.7.0/serving.yaml
+  - apiVersion: "kapitan.razee.io/v1alpha1"
+    kind: RemoteResourceS3
+    metadata:
+      name: knative-build
+      namespace: default
+    spec:
+      requests:
+      - options:
+          url: https://github.com/knative/build/releases/download/v0.7.0/build.yaml
+  - apiVersion: "kapitan.razee.io/v1alpha1"
+    kind: RemoteResourceS3
+    metadata:
+      name: knative-eventing
+      namespace: default
+    spec:
+      requests:
+      - options:
+          url: https://github.com/knative/eventing/releases/download/v0.7.0/release.yaml
+  - apiVersion: "kapitan.razee.io/v1alpha1"
+    kind: RemoteResourceS3
+    metadata:
+      name: knative-eventing-sources
+      namespace: default
+    spec:
+      requests:
+      - options:
+          url: https://github.com/knative/eventing-sources/releases/download/v0.7.0/eventing-sources.yaml
+  - apiVersion: "kapitan.razee.io/v1alpha1"
+    kind: RemoteResourceS3
+    metadata:
+      name: knative-monitoring
+      namespace: default
+    spec:
+      requests:
+      - options:
+          url: https://github.com/knative/serving/releases/download/v0.7.0/monitoring.yaml
+  - apiVersion: "kapitan.razee.io/v1alpha1"
+    kind: RemoteResourceS3
+    metadata:
+      name: knative-3p
+      namespace: default
+    spec:
+      requests:
+      - options:
+          url: https://raw.githubusercontent.com/knative/serving/v0.7.0/third_party/config/build/clusterrole.yaml
